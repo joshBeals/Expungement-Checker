@@ -4,19 +4,29 @@
  * github.com/joshBeals
  */
 
-import { ListGroup } from "react-bootstrap";
+import { ListGroup, Tooltip } from "react-bootstrap";
 import ConvictionForm from "../../forms/ConvictionForm";
+import { PencilSquare, Trash } from "react-bootstrap-icons";
+import { useAppState } from "../../store/AppStateContext";
 
 function Conviction() {
+
+    const { convictions, addConviction, deleteConviction } = useAppState();
+
+    console.log(convictions);
+
     return(
         <div>
             <ConvictionForm />
             <ListGroup>
-                <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                {convictions.map((conviction, index) => (
+                    <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
+                        {conviction}
+                        <div>
+                            <Trash onClick={() => deleteConviction(index)} className="text-danger" style={{ cursor: 'pointer' }}/>
+                        </div>
+                    </ListGroup.Item>
+                ))}
             </ListGroup>
         </div>
     );

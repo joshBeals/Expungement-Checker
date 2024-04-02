@@ -16,7 +16,7 @@ function Setup() {
                 </Accordion.Body>
             </Accordion.Item>
             <Accordion.Item eventKey="1">
-                <Accordion.Header>Accordion Item #2</Accordion.Header>
+                <Accordion.Header>Waiting Periods</Accordion.Header>
                 <Accordion.Body>
                     
                 </Accordion.Body>
