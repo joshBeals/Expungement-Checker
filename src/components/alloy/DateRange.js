@@ -4,24 +4,26 @@
  * github.com/joshBeals
  */
 
-import { ListGroup, Tooltip } from "react-bootstrap";
-import ConvictionForm from "../../forms/ConvictionForm";
 import { Trash } from "react-bootstrap-icons";
 import { useAppState } from "../../store/AppStateContext";
+import DateRangeForm from "../../forms/DateRangeForm";
+import { ListGroup } from "react-bootstrap";
 
-function Conviction() {
+function DateRange() {
 
-    const { convictions, addConviction, deleteConviction } = useAppState();
+    const { dateRanges, deleteDateRange } = useAppState();
+
+    console.log(dateRanges);
 
     return(
         <div>
-            <ConvictionForm />
+            <DateRangeForm />
             <ListGroup>
-                {convictions.map((conviction, index) => (
+                {dateRanges.map((range, index) => (
                     <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
-                        {conviction}
+                        {range?.within}, {range?.beyond}
                         <div>
-                            <Trash onClick={() => deleteConviction(index)} className="text-danger" style={{ cursor: 'pointer' }}/>
+                            <Trash onClick={() => deleteDateRange(index)} className="text-danger" style={{ cursor: 'pointer' }}/>
                         </div>
                     </ListGroup.Item>
                 ))}
@@ -30,4 +32,4 @@ function Conviction() {
     );
 };
 
-export default Conviction;
+export default DateRange;

@@ -3,20 +3,23 @@
  * joshbeals22@gmail.com
  * github.com/joshBeals
  */
+
 import React, { useState } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { useAppState } from '../store/AppStateContext';
-import isStringInArray from '../helpers/isStringInArray';
+import createObjectFromNumber from '../helpers/createObjectFromNumber';
 
-function ConvictionForm() {
+function DateRangeForm() {
 
-    const { addConviction, convictions } = useAppState();
-    const [newConviction, setNewConviction] = useState('');
+    const { addDateRange, dateRanges } = useAppState();
+    const [range, setRange] = useState('');
 
     const handleAdd = () => {
-        if(newConviction && !isStringInArray(newConviction, convictions)){
-            addConviction(newConviction);
-            setNewConviction('');
+        const isPresent = dateRanges.some(dateRange => dateRange.range === range.toString());
+        if(range > 0 && !isPresent){
+            const newRange = createObjectFromNumber(range);
+            addDateRange(newRange);
+            setRange('');
         }
     };
 
@@ -27,10 +30,12 @@ function ConvictionForm() {
                 <Form.Control
                     className="mb-3"
                     id="inlineFormInput"
-                    placeholder="Enter Conviction Category"
-                    type="text" 
-                    value={newConviction} 
-                    onChange={(e) => setNewConviction(e.target.value)}
+                    placeholder="Pick Date Range"
+                    type="number" 
+                    min="1"
+                    max="10"
+                    value={range} 
+                    onChange={(e) => setRange(e.target.value)}
                 />
             </Col>
             <Col xs={2}>
@@ -41,4 +46,4 @@ function ConvictionForm() {
     );
 }
 
-export default ConvictionForm;
+export default DateRangeForm;
