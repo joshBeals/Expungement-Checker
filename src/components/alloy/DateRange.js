@@ -7,7 +7,7 @@
 import { Trash } from "react-bootstrap-icons";
 import { useAppState } from "../../store/AppStateContext";
 import DateRangeForm from "../../forms/DateRangeForm";
-import { ListGroup } from "react-bootstrap";
+import { Alert, ListGroup } from "react-bootstrap";
 
 function DateRange() {
 
@@ -15,6 +15,9 @@ function DateRange() {
 
     return(
         <div>
+            <Alert variant="warning">
+            The dates ranges specified here are going to be used in date ordering and also for building logic for waiting periods
+            </Alert>
             <DateRangeForm />
             <ListGroup>
                 {dateRanges.map((range, index) => (

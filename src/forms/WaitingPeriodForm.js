@@ -44,19 +44,20 @@ function WaitingPeriodForm() {
                 <Col xs={10}>
                     <Row>
                         <Col>
-                            <Form.Select value={wait} onChange={handleWaitChange}>
-                                <option>Select Waiting Period</option>
-                                {dateRanges?.map(range => (
-                                    <option key={range.range} value={range.range}>{range.range}</option>
-                                ))}
-                            </Form.Select>
-                        </Col>
-                        <Col>
                             <Form.Select value={conviction} onChange={handleConvictionChange}>
                                 <option>Select Conviction Type</option>
                                 {convictions?.map(conviction => (
                                     <option key={conviction} value={conviction}>{conviction}</option>
                                 ))}
+                            </Form.Select>
+                        </Col>
+                        <Col>
+                            <Form.Select value={wait} onChange={handleWaitChange}>
+                                <option>Select Waiting Period</option>
+                                {dateRanges?.map(range => (
+                                    <option key={range.range} value={range.range}>{range.range}</option>
+                                ))}
+                                <option value="Never">Never</option>
                             </Form.Select>
                         </Col>
                     </Row>

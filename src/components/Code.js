@@ -8,10 +8,11 @@ import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { useAppState } from '../store/AppStateContext';
+import getWithin from '../helpers/getWithin';
 
 function Code() {
 
-    const { convictions, dateRanges } = useAppState();
+    const { convictions, dateRanges, waitingPeriods } = useAppState();
 
     let innerString = '';
     let irreflexive = 'irreflexive[';
@@ -125,7 +126,51 @@ fact {
 	Date in Event.date
 	always (some now implies one now.date)
 	all e1, e2: Event | hb[e1, e2] implies e1.date.lt[e2.date]
-}`;
+}
+`;
+};
+
+if(waitingPeriods.length > 0){
+    const refactoredWait = waitingPeriods.reduce((acc, record) => {
+        // If the key for this name doesn't exist, create it with an empty array
+        if (!acc[record.name]) {
+            acc[record.name] = [];
+        }
+        // Push the current record into the array for its name
+        acc[record.name].push(record);
+        return acc;
+    }, {});
+
+    for (const [key, value] of Object.entries(refactoredWait)) {
+        if(key){
+let temp = `
+pred ${key}[c: Conviction] {
+    (`;
+        value?.forEach((val, index) => {
+            temp += `(c in ${val.conviction})`;
+        if (index < value.length - 1) {
+            temp += " or ";
+        }
+        });
+        temp += `) and c.expunged and c.exp.date in c.date.${getWithin(value[0]?.wait)}
+}
+`;
+        codeString += temp;
+        }
+        
+    }
+let temp = `
+fact {`;
+    waitingPeriods?.forEach(val => {
+        if(val?.name){
+            temp += `
+    no c: ${val?.conviction} | ${val?.name}[c]`;
+        }
+    });
+    temp += `
+}
+`
+    codeString += temp;
 }
 
     return (

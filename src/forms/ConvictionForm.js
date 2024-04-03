@@ -27,7 +27,7 @@ function ConvictionForm() {
                 <Form.Control
                     className="mb-3"
                     id="inlineFormInput"
-                    placeholder="Enter Conviction Category"
+                    placeholder="Enter Conviction Type"
                     type="text" 
                     value={newConviction} 
                     onChange={(e) => setNewConviction(e.target.value)}
