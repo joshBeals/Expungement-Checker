@@ -13,15 +13,13 @@ function DateRange() {
 
     const { dateRanges, deleteDateRange } = useAppState();
 
-    console.log(dateRanges);
-
     return(
         <div>
             <DateRangeForm />
             <ListGroup>
                 {dateRanges.map((range, index) => (
                     <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
-                        {range?.within}, {range?.beyond}
+                        {range?.range} Years, {range?.within}, {range?.beyond}
                         <div>
                             <Trash onClick={() => deleteDateRange(index)} className="text-danger" style={{ cursor: 'pointer' }}/>
                         </div>

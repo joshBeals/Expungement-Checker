@@ -11,7 +11,7 @@ import { useAppState } from "../../store/AppStateContext";
 
 function Conviction() {
 
-    const { convictions, addConviction, deleteConviction } = useAppState();
+    const { convictions, deleteConviction } = useAppState();
 
     return(
         <div>

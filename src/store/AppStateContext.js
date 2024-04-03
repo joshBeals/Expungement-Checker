@@ -17,11 +17,16 @@ export const AppStateProvider = ({ children }) => {
     const savedRanges = localStorage.getItem('RangesContext');
     return savedRanges ? JSON.parse(savedRanges) : [];
   });
+  const [waitingPeriods, setWaitingPeriods] = useState(() => {
+    const savedWaiting = localStorage.getItem('WaitingContext');
+    return savedWaiting ? JSON.parse(savedWaiting) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem('ConvictionContext', JSON.stringify(convictions));
     localStorage.setItem('RangesContext', JSON.stringify(dateRanges.sort((a, b) => parseInt(a.range) - parseInt(b.range))));
-  }, [convictions, dateRanges]);
+    localStorage.setItem('WaitingContext', JSON.stringify(waitingPeriods));
+  }, [convictions, dateRanges, waitingPeriods]);
 
   // Function to add a conviction
   const addConviction = (conviction) => {
@@ -45,6 +50,16 @@ export const AppStateProvider = ({ children }) => {
     setDateRanges(filteredRanges);
   };
 
+
+  const addWaitingPeriod = (range) => {
+    setWaitingPeriods([...waitingPeriods, range]);
+  };
+
+  const deleteWaitingPeriod = (index) => {
+    const filteredRanges = waitingPeriods.filter((_, idx) => idx !== index);
+    setWaitingPeriods(filteredRanges);
+  };
+
   // Value to be passed to consuming components
   const value = {
     convictions,
@@ -53,6 +68,9 @@ export const AppStateProvider = ({ children }) => {
     dateRanges,
     addDateRange,
     deleteDateRange,
+    waitingPeriods,
+    addWaitingPeriod,
+    deleteWaitingPeriod,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

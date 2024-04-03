@@ -6,6 +6,7 @@
 import { Accordion } from "react-bootstrap";
 import Conviction from "./alloy/Conviction";
 import DateRange from "./alloy/DateRange";
+import WaitingPeriod from "./alloy/WaitingPeriod";
 
 function Setup() {
     return(
@@ -25,7 +26,7 @@ function Setup() {
             <Accordion.Item eventKey="2">
                 <Accordion.Header>Waiting Periods (Logic)</Accordion.Header>
                 <Accordion.Body>
-                    
+                    <WaitingPeriod />
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
