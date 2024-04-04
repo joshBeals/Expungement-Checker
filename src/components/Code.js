@@ -159,12 +159,16 @@ pred ${key}[c: Conviction] {
         }
         
     }
+    
 let temp = `
 fact {`;
     waitingPeriods?.forEach(val => {
         if(val?.name){
             temp += `
     no c: ${val?.conviction} | ${val?.name}[c]`;
+        }else{
+            temp += `
+    no c: Conviction | c in ${val?.conviction} and expunged[c]`;
         }
     });
     temp += `

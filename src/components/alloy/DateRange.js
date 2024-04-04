@@ -16,7 +16,7 @@ function DateRange() {
     return(
         <div>
             <Alert variant="warning">
-            The dates ranges specified here are going to be used in date ordering and also for building logic for waiting periods
+            The date ranges specified here are going to be used in date ordering and also for building logic for waiting periods
             </Alert>
             <DateRangeForm />
             <ListGroup>

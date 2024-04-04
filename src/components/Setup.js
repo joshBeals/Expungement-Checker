@@ -7,6 +7,7 @@ import { Accordion } from "react-bootstrap";
 import Conviction from "./alloy/Conviction";
 import DateRange from "./alloy/DateRange";
 import WaitingPeriod from "./alloy/WaitingPeriod";
+import ExpungementLimit from "./alloy/ExpungementLimit";
 
 function Setup() {
     return(
@@ -32,7 +33,7 @@ function Setup() {
             <Accordion.Item eventKey="3">
                 <Accordion.Header>Expungement Limits</Accordion.Header>
                 <Accordion.Body>
-                    
+                    <ExpungementLimit />
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>

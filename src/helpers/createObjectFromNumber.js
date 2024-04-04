@@ -4,10 +4,7 @@
  * github.com/joshBeals
  */
 
-function numberToWords(n) {
-    const words = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
-    return n >= 1 && n <= 10 ? words[n-1] : n.toString();
-}
+import numberToWords from "./numberToWords";
 
 function createObjectFromNumber(n) {
     return {

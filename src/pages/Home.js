@@ -12,14 +12,14 @@ export default function Home() {
         <Row>
           <Col>
             <Alert variant="primary">
-                <Alert.Heading>Expungement as Code</Alert.Heading>
-                <p>
-                    Aww yeah, you successfully read this important alert message. Why do programmers prefer dark mode? 
-                </p>
-                <hr />
-                <p className="mb-0">
-                    Because light attracts bugs!
-                </p>
+              <Alert.Heading>Expungement as Code</Alert.Heading>
+              <p>
+                  Aww yeah, you successfully read this important alert message. Why do programmers prefer dark mode? 
+              </p>
+              <hr />
+              <p className="mb-0">
+                  Because light attracts bugs!
+              </p>
             </Alert>
             <Row>
               <Col>
