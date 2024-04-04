@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button, Tab, Tabs } from 'react-bootstrap';
 import { useAppState } from '../store/AppStateContext';
 
 function ExpungementLimitForm() {
@@ -33,40 +33,51 @@ function ExpungementLimitForm() {
         }));
     };
 
-    const handleSubmit = () => {
+    const handleIndividual = () => {
         console.log(formEntries);
     };
 
     return (
-        <Form className='mb-3'>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                <Form.Label>Expungement Limit</Form.Label>
-                <Form.Control type="number" placeholder="" />
-            </Form.Group>
-            {convictions?.map((conviction, index) => (
-                <Row key={index} className='mb-3'>
-                    <Col>
-                        <Form.Check
-                            type="checkbox"
-                            label={conviction}
-                            onChange={() => handleCheckboxChange(conviction)}
-                            checked={formEntries.some(entry => entry.conviction === conviction)}
-                        />
-                    </Col>
-                    <Col>
-                        <Form.Control 
-                            type="number"
-                            min="0"
-                            max="8"
-                            value={(formEntries.find(entry => entry.conviction === conviction) || {}).count}
-                            onChange={(e) => handleCountChange(conviction, e.target.value)}
-                            disabled={!formEntries.some(entry => entry.conviction === conviction)}
-                        />
-                    </Col>
-                </Row>
-            ))}
-            <Button onClick={handleSubmit} variant="outline-primary" className="mt-3 w-100"> Add </Button>
-        </Form>
+        <div>
+            <Tabs justify defaultActiveKey="total" variant="tabs" className="mb-3">
+                <Tab eventKey="total" title="Total">
+                    <Form className='mb-3'>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Expungement Limit</Form.Label>
+                            <Form.Control type="number" placeholder="" />
+                        </Form.Group>
+                        <Button variant="outline-primary" className="w-100"> Add </Button>
+                    </Form>
+                </Tab>
+                <Tab eventKey="individual" title="Individual">
+                    <Form className='mb-3'>
+                        {convictions?.map((conviction, index) => (
+                            <Row key={index} className='mb-3'>
+                                <Col>
+                                    <Form.Check
+                                        type="checkbox"
+                                        label={conviction}
+                                        onChange={() => handleCheckboxChange(conviction)}
+                                        checked={formEntries.some(entry => entry.conviction === conviction)}
+                                    />
+                                </Col>
+                                <Col>
+                                    <Form.Control 
+                                        type="number"
+                                        min="0"
+                                        max="8"
+                                        value={(formEntries.find(entry => entry.conviction === conviction) || {}).count}
+                                        onChange={(e) => handleCountChange(conviction, e.target.value)}
+                                        disabled={!formEntries.some(entry => entry.conviction === conviction)}
+                                    />
+                                </Col>
+                            </Row>
+                        ))}
+                        <Button onClick={handleIndividual} variant="outline-primary" className="mt-3 w-100"> Add </Button>
+                    </Form>
+                </Tab>
+            </Tabs>
+        </div>
     );
 }
 
