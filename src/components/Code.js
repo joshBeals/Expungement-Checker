@@ -12,7 +12,7 @@ import getWithin from '../helpers/getWithin';
 
 function Code() {
 
-    const { convictions, dateRanges, waitingPeriods } = useAppState();
+    const { convictions, dateRanges, waitingPeriods, totalLimit, limits } = useAppState();
 
     let innerString = '';
     let irreflexive = 'irreflexive[';
@@ -173,12 +173,93 @@ fact {`;
     });
     temp += `
 }
-`
+`;
     codeString += temp;
 }
 
+console.log(totalLimit);
+console.log(limits);
+    if(limits.length > 0){
+        let temp = '';
+        limits?.forEach((data, index) => {
+            temp += `
+pred rule${index+1}[c: Conviction] {`;
+            
+            if(data?.total){
+                let string = `
+    some disj `;
+                let count = data?.total;
+                let comma = '';
+                let plus = '';
+                let hb = '';
+                let rest = '';
+                for(let i = 1; i<=count; i++){
+                    comma += `c${i}`;
+                    plus += `c${i}`;
+                    if(i <= count - 1){
+                        comma += ', ';
+                        plus += ' + ';
+                        hb += `hb[c${i}, c${i+1}] and `;
+                    }else{
+                        hb += `hb[c${i}, c] and`;
+                    }
+                }
+                data?.breakdown?.forEach(((dat, index) => {
+                    rest += `(#(${dat?.conviction} & (${plus})) = ${dat?.count})`;
+                    if(index < data?.breakdown.length - 1){
+                        rest += ' and ';
+                    }
+                }));
+                string += `${comma}: Conviction | 
+        ${hb}
+        ${rest}`;
+                temp += string;
+            }else{
+                let string = `
+    some `;
+                let count = data?.breakdown[0]?.count;
+                let comma = '';
+                let plus = '';
+                let hb = '';
+                for(let i = 1; i<=count; i++){
+                    comma += `c${i}`;
+                    plus += `c${i}`;
+                    if(i <= count - 1){
+                        comma += ', ';
+                        plus += ' + ';
+                        hb += `hb[c${i}, c] and `;
+                    }else{
+                        hb += `hb[c${i}, c]`;
+                    }
+                }
+                string += `${comma}: ${data?.breakdown[0]?.conviction} | 
+        #(${plus}) = ${count} and ${hb}`;
+
+                temp += string;
+            }
+
+            temp += `
+}
+`;
+        });
+
+        codeString += temp;
+
+temp = `
+fact {`;
+        limits?.forEach((data, index) => {
+            temp += `
+    no c: Conviction | c in rule${index+1}[c] and expunged[c]`;
+        });
+        temp += `
+}
+`;
+
+        codeString += temp;
+    }
+
     return (
-        <SyntaxHighlighter language="javascript" style={docco} showLineNumbers>
+        <SyntaxHighlighter language="javascript" style={docco} showLineNumbers wrapLines>
             {codeString}
         </SyntaxHighlighter>
     );

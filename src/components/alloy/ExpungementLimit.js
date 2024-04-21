@@ -6,10 +6,14 @@
 
 import { Trash } from "react-bootstrap-icons";
 import { useAppState } from "../../store/AppStateContext";
-import { Alert, Col, Row, Table } from "react-bootstrap";
+import { Alert, Card, Col, ListGroup, Row } from "react-bootstrap";
 import ExpungementLimitForm from "../../forms/ExpungementLimitForm";
 
 function ExpungementLimit() {
+
+    const { limits, deleteLimit } = useAppState();
+
+    console.log(limits);
 
     return(
         <div>
@@ -23,7 +27,24 @@ function ExpungementLimit() {
                     <ExpungementLimitForm />
                 </Col>
                 <Col xs={7}>
-                
+                    <Card>
+                        <Card.Header as="h5">Expungement Rules</Card.Header>
+                        <Card.Body>
+                            <ListGroup>
+                                {limits?.map((data, index) => (
+                                    <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
+                                        {data?.total ? `No expungement after ${data?.total} expunged convictions including: ` : 'No expungement after '}
+                                        {data?.breakdown?.map((dat, index) => (
+                                            `${dat?.count} ${dat?.conviction}${index < data?.breakdown.length -1 ? ', ' : ''}`
+                                        ))}
+                                        <div>
+                                            <Trash onClick={() => deleteLimit(index)} className="text-danger" style={{ cursor: 'pointer' }}/>
+                                        </div>
+                                    </ListGroup.Item>
+                                ))}
+                            </ListGroup>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
         </div>

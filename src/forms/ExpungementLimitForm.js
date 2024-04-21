@@ -10,8 +10,10 @@ import { useAppState } from '../store/AppStateContext';
 
 function ExpungementLimitForm() {
 
+    const { convictions, totalLimit, setTotalLimit, limits, addLimit } = useAppState();
+    const [total, setTotal] = useState(totalLimit);
+    const [count, setCount] = useState('');
     const [formEntries, setFormEntries] = useState([]);
-    const { convictions } = useAppState();
 
     const handleCheckboxChange = (conviction) => {
         setFormEntries((prevEntries) => {
@@ -34,23 +36,51 @@ function ExpungementLimitForm() {
     };
 
     const handleIndividual = () => {
-        console.log(formEntries);
+        if(formEntries.length > 0){
+            let temp = 0;
+            formEntries.forEach(entry => {
+                temp += parseInt(entry.count);
+            });
+            // if(count <= 0 && formEntries.length == 1){
+            //     addLimit({total: count, breakdown: formEntries});
+            // }else{
+            //     alert("Select just one conviction type");
+            //     return;
+            // }
+            if((parseInt(count) >= temp)){
+                addLimit({total: count, breakdown: formEntries});
+            }else{
+                alert("Your individual counts can't be more than total");
+            }
+            setCount('');
+            setFormEntries([]);
+        }
     };
+
+    const handleTotal = () => {
+        if(total > 0){
+            setTotalLimit(total);
+        }
+    }
 
     return (
         <div>
             <Tabs justify defaultActiveKey="total" variant="tabs" className="mb-3">
-                <Tab eventKey="total" title="Total">
+                <Tab eventKey="total" title="General">
                     <Form className='mb-3'>
                         <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                             <Form.Label>Expungement Limit</Form.Label>
-                            <Form.Control type="number" placeholder="" />
+                            <Form.Control value={total} onChange={(e) => setTotal(e.target.value)} type="number" />
                         </Form.Group>
-                        <Button variant="outline-primary" className="w-100"> Add </Button>
+                        <Button onClick={handleTotal} variant="outline-primary" className="w-100"> Save </Button>
                     </Form>
                 </Tab>
-                <Tab eventKey="individual" title="Individual">
+                <Tab eventKey="individual" title="Specific">
                     <Form className='mb-3'>
+                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                            <Form.Label>Total</Form.Label>
+                            <Form.Control min="0" value={count} onChange={(e) => setCount(e.target.value)} type="number" />
+                        </Form.Group>
                         {convictions?.map((conviction, index) => (
                             <Row key={index} className='mb-3'>
                                 <Col>
@@ -66,7 +96,7 @@ function ExpungementLimitForm() {
                                         type="number"
                                         min="0"
                                         max="8"
-                                        value={(formEntries.find(entry => entry.conviction === conviction) || {}).count}
+                                        value={(formEntries.find(entry => entry.conviction === conviction) || {}).count || ''}
                                         onChange={(e) => handleCountChange(conviction, e.target.value)}
                                         disabled={!formEntries.some(entry => entry.conviction === conviction)}
                                     />

@@ -21,12 +21,22 @@ export const AppStateProvider = ({ children }) => {
     const savedWaiting = localStorage.getItem('WaitingContext');
     return savedWaiting ? JSON.parse(savedWaiting) : [];
   });
+  const [totalLimit, setTotalLimit] = useState(() => {
+    const savedTotal = localStorage.getItem('totalLimit');
+    return savedTotal ? savedTotal : 0;
+  });
+  const [limits, setLimits] = useState(() => {
+    const savedLimit = localStorage.getItem('limits');
+    return savedLimit ? JSON.parse(savedLimit) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem('ConvictionContext', JSON.stringify(convictions));
     localStorage.setItem('RangesContext', JSON.stringify(dateRanges.sort((a, b) => parseInt(a.range) - parseInt(b.range))));
     localStorage.setItem('WaitingContext', JSON.stringify(waitingPeriods));
-  }, [convictions, dateRanges, waitingPeriods]);
+    localStorage.setItem('totalLimit', totalLimit);
+    localStorage.setItem('limits', JSON.stringify(limits));
+  }, [convictions, dateRanges, waitingPeriods, totalLimit, limits]);
 
   // Function to add a conviction
   const addConviction = (conviction) => {
@@ -60,6 +70,15 @@ export const AppStateProvider = ({ children }) => {
     setWaitingPeriods(filteredRanges);
   };
 
+  const addLimit = (limit) => {
+    setLimits([...limits, limit]);
+  };
+
+  const deleteLimit = (index) => {
+    const filteredRanges = limits.filter((_, idx) => idx !== index);
+    setLimits(filteredRanges);
+  };
+
   // Value to be passed to consuming components
   const value = {
     convictions,
@@ -71,6 +90,11 @@ export const AppStateProvider = ({ children }) => {
     waitingPeriods,
     addWaitingPeriod,
     deleteWaitingPeriod,
+    totalLimit,
+    setTotalLimit,
+    limits,
+    addLimit,
+    deleteLimit,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
