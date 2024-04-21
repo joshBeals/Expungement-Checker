@@ -26,7 +26,7 @@ export default function Home() {
                 <Button className="w-100" size="lg" variant="outline-success" href="/alloy-generator">Create Model</Button>
               </Col>
               <Col>
-                <Button className="w-100" size="lg" variant="outline-danger" href="/">Ask Questions</Button>
+                <Button className="w-100" size="lg" variant="outline-danger" href="/scenario">Create Scenarios</Button>
               </Col>
             </Row>
           </Col>

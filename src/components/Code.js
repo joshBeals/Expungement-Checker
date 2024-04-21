@@ -249,7 +249,7 @@ temp = `
 fact {`;
         limits?.forEach((data, index) => {
             temp += `
-    no c: Conviction | c in rule${index+1}[c] and expunged[c]`;
+    no c: Conviction | rule${index+1}[c] and expunged[c]`;
         });
         temp += `
 }
