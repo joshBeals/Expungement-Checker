@@ -29,6 +29,7 @@ export const AppStateProvider = ({ children }) => {
     const savedLimit = localStorage.getItem('limits');
     return savedLimit ? JSON.parse(savedLimit) : [];
   });
+  const [scenarios, setScenarios] = useState([]);
 
   useEffect(() => {
     localStorage.setItem('ConvictionContext', JSON.stringify(convictions));
@@ -79,6 +80,15 @@ export const AppStateProvider = ({ children }) => {
     setLimits(filteredRanges);
   };
 
+  const addScenario = (scenario) => {
+    setScenarios([...scenarios, scenario]);
+  };
+
+  const deleteScenario = (index) => {
+    const filteredRanges = scenarios.filter((_, idx) => idx !== index);
+    setScenarios(filteredRanges);
+  };
+
   // Value to be passed to consuming components
   const value = {
     convictions,
@@ -95,6 +105,9 @@ export const AppStateProvider = ({ children }) => {
     limits,
     addLimit,
     deleteLimit,
+    scenarios,
+    addScenario,
+    deleteScenario
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

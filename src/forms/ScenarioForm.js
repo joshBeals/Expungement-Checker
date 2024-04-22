@@ -8,19 +8,24 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, Button, Card } from 'react-bootstrap';
 import { useAppState } from '../store/AppStateContext';
 import capitalizeFirst from '../helpers/capitalizeFirst';
+import generateYearRange from '../helpers/generateYearRange';
 
 function ScenarioForm() {
 
-    const [wait, setWait] = useState('');
+    const { addScenario } = useAppState();
+
     const [types, setTypes] = useState([]);
+    const [convictionType, setConvictionType] = useState('');
     const [state, setState] = useState('');
     const [states, setStates] = useState([]); 
+    const currentYear = new Date().getFullYear();
+    const years = generateYearRange(1960, currentYear);
+    const [selectedYear, setSelectedYear] = useState('');
 
     useEffect(() => {
         fetch('./law.json')
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             setStates(Object.keys(data));
             if (data && state && data[state]) {
                 setTypes(data[state]);
@@ -33,39 +38,66 @@ function ScenarioForm() {
         setState(e.target.value)
     }
 
+    const handleConvictionTypeChange = (event) => {
+        setConvictionType(event.target.value);  
+    };
+
+    const handleYearChange = (event) => {
+        setSelectedYear(event.target.value); 
+    };
+
+    const handleAdd = () => {
+        if(convictionType != '' && selectedYear != ''){
+            const result = {type: convictionType, year: selectedYear}
+            addScenario(result);
+            setConvictionType('');
+            setSelectedYear('');
+        }
+    };
+
     return (
         <Card>
             <Card.Header>Create Scenario</Card.Header>
             <Card.Body>
                 <Form className='mb-3'>
-                    <Row className="align-items-center">
-                        <Col className='mb-3' xs={12}>
+                    <Row className='mb-3'>
+                        <Col xs={12}>
                             <Form.Label>Choose State</Form.Label>
-                            <Form.Select value={state} onChange={handleStateChange}>
+                            <Form.Select value={state} onChange={handleStateChange} disabled={state !== ""}>
                                 <option>Select State</option>
                                 {states?.map(state => (
                                     <option key={state} value={state}>{capitalizeFirst(state)}</option>
                                 ))}
                             </Form.Select>
                         </Col>
-                        <Col xs={12}>
-                            <Row>
-                                <Col>
-                                    <Form.Select>
-                                        <option>Select Conviction Type</option>
-                                    </Form.Select>
-                                </Col>
-                                <Col>
-                                    <Form.Select>
-                                        <option>Select Year</option>
-                                    </Form.Select>
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col xs={2}>
-                            <Button variant="outline-primary" className="w-100"> Add </Button>
-                        </Col>
                     </Row>
+                    {state != '' && (
+                        <Row className="align-items-center">
+                            <Col xs={10}>
+                                <Row>
+                                    <Col>
+                                        <Form.Select value={convictionType} onChange={handleConvictionTypeChange}>
+                                            <option value="">Select Conviction Type</option>
+                                            {types?.map((type, index) => (
+                                                <option key={index} value={type}>{type}</option>
+                                            ))}
+                                        </Form.Select>
+                                    </Col>
+                                    <Col>
+                                        <Form.Select value={selectedYear} onChange={handleYearChange}>
+                                            <option value="">Select Year</option>
+                                            {years.map(year => (
+                                                <option key={year} value={year}>{year}</option>
+                                            ))}
+                                        </Form.Select>
+                                    </Col>
+                                </Row>
+                            </Col>
+                            <Col xs={2}>
+                                <Button onClick={handleAdd} variant="outline-primary" className="w-100"> Add </Button>
+                            </Col>
+                        </Row>
+                    )}
                 </Form>
             </Card.Body>
         </Card>

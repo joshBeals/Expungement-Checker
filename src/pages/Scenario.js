@@ -5,7 +5,8 @@
  */
 import { useState } from "react";
 import { Alert, Col, Container, Row } from "react-bootstrap";
-import ScenarioForm from "../forms/ScenarioForm";
+import ScenarioMain from "../components/ScenarioMain";
+import ScenarioVisual from "../components/ScenarioVisual";
 
 export default function Scenario() {
 
@@ -25,10 +26,12 @@ export default function Scenario() {
                         Goodluck!
                     </p>
                 </Alert>
-                <ScenarioForm />
+                <ScenarioMain />
             </Col>
-            <Col className="p-3" style={{ height: "100%", overflowY: "auto", background: "#f2f7f4" }}>
-                
+            <Col className="p-3" style={{ height: "100%", overflowY: "auto" }}>
+                <div className="p-5">
+                    <ScenarioVisual />
+                </div>
             </Col>
             {show && (
             <Col className="bg-white p-3" style={{ height: "100%", overflowY: "auto" }}>
@@ -39,3 +42,4 @@ export default function Scenario() {
         </Container>
     );
 }
+// background: "#f2f7f4"
