@@ -10,8 +10,6 @@ import ScenarioVisual from "../components/ScenarioVisual";
 
 export default function Scenario() {
 
-    const [show, setShow] = useState(false); 
-
     return (
         <Container fluid>
         <Row style={{ height: "100vh" }}>
@@ -28,16 +26,11 @@ export default function Scenario() {
                 </Alert>
                 <ScenarioMain />
             </Col>
-            <Col className="p-3" style={{ height: "100%", overflowY: "auto" }}>
+            <Col className="p-3" style={{ height: "100%", overflowY: "auto", background: "#f1f4fb" }}>
                 <div className="p-5">
                     <ScenarioVisual />
                 </div>
             </Col>
-            {show && (
-            <Col className="bg-white p-3" style={{ height: "100%", overflowY: "auto" }}>
-                
-            </Col>
-            )}
         </Row>
         </Container>
     );

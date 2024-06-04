@@ -5,18 +5,26 @@
  */
 
 import { Trash } from "react-bootstrap-icons";
-import { Alert, Table } from "react-bootstrap";
+import { Alert, Button, Table } from "react-bootstrap";
 import ScenarioForm from "../forms/ScenarioForm";
 import { useAppState } from "../store/AppStateContext";
+import ScenarioResult from "./ScenarioResult";
+import { useState } from "react";
 
 function ScenarioMain() {
-
     const { scenarios, deleteScenario } = useAppState();
 
-    return(
+    const [show, setShow] = useState(false);
+
+    return (
         <div>
             <ScenarioForm />
-            <Table striped bordered className="mt-3">
+            <Table
+                striped
+                bordered
+                className="mt-3"
+                style={{ borderRadius: "20px" }}
+            >
                 <thead>
                     <tr>
                         <th>Conviction Type</th>
@@ -29,11 +37,21 @@ function ScenarioMain() {
                         <tr key={index}>
                             <td>{scenario.type}</td>
                             <td>{scenario.year}</td>
-                            <td><Trash onClick={() => deleteScenario(index)} className="text-danger" style={{ cursor: 'pointer' }}/></td>
+                            <td>
+                                <Trash
+                                    onClick={() => deleteScenario(index)}
+                                    className="text-danger"
+                                    style={{ cursor: "pointer" }}
+                                />
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
+            <Button variant="primary" href="/scenario/result">
+                Check Result
+            </Button>
+            <ScenarioResult show={show} setShow={setShow} />
         </div>
     );
 };
