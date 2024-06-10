@@ -29,7 +29,10 @@ export const AppStateProvider = ({ children }) => {
     const savedLimit = localStorage.getItem('limits');
     return savedLimit ? JSON.parse(savedLimit) : [];
   });
-  const [scenarios, setScenarios] = useState([]);
+  const [scenarios, setScenarios] = useState(() => {
+    const savedScenarios = localStorage.getItem('scenarios');
+    return savedScenarios ? JSON.parse(savedScenarios) : [];
+  });
 
   useEffect(() => {
     localStorage.setItem('ConvictionContext', JSON.stringify(convictions));
@@ -37,7 +40,8 @@ export const AppStateProvider = ({ children }) => {
     localStorage.setItem('WaitingContext', JSON.stringify(waitingPeriods));
     localStorage.setItem('totalLimit', totalLimit);
     localStorage.setItem('limits', JSON.stringify(limits));
-  }, [convictions, dateRanges, waitingPeriods, totalLimit, limits]);
+    localStorage.setItem('scenarios', JSON.stringify(scenarios));
+  }, [convictions, dateRanges, waitingPeriods, totalLimit, limits, scenarios]);
 
   // Function to add a conviction
   const addConviction = (conviction) => {

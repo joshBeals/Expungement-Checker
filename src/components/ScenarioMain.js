@@ -16,6 +16,14 @@ function ScenarioMain() {
 
     const [show, setShow] = useState(false);
 
+    const showResult = () => {
+        if (scenarios.length === 0) {
+            alert("You haven't setup any scenario yet!");
+        } else {
+            window.location.href = "/scenario/result";
+        }
+    }
+
     return (
         <div>
             <ScenarioForm />
@@ -48,10 +56,9 @@ function ScenarioMain() {
                     ))}
                 </tbody>
             </Table>
-            <Button variant="primary" href="/scenario/result">
+            <Button variant="primary" onClick={showResult}>
                 Check Result
             </Button>
-            <ScenarioResult show={show} setShow={setShow} />
         </div>
     );
 };
