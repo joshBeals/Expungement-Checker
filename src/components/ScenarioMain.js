@@ -14,8 +14,6 @@ import { useState } from "react";
 function ScenarioMain() {
     const { scenarios, deleteScenario } = useAppState();
 
-    const [show, setShow] = useState(false);
-
     const showResult = () => {
         if (scenarios.length === 0) {
             alert("You haven't setup any scenario yet!");
@@ -37,14 +35,20 @@ function ScenarioMain() {
                     <tr>
                         <th>Conviction Type</th>
                         <th>Year</th>
+                        <th>Assaultive</th>
+                        <th>TenYearFelony</th>
+                        <th>OWI</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {scenarios?.map((scenario, index) => (
                         <tr key={index}>
-                            <td>{scenario.type}</td>
-                            <td>{scenario.year}</td>
+                            <td>{scenario?.type}</td>
+                            <td>{scenario?.year}</td>
+                            <td>{scenario?.assaultive ? 'Yes' : 'No'}</td>
+                            <td>{scenario?.tenner ? 'Yes' : 'No'}</td>
+                            <td>{scenario?.owi ? 'Yes' : 'No'}</td>
                             <td>
                                 <Trash
                                     onClick={() => deleteScenario(index)}

@@ -1,0 +1,15 @@
+{
+    "michigan": [
+        "Felony",
+        "Misdemeanor",
+        "TenYearFelony"
+    ],
+    "utah": [
+        "Felony",
+        "ClassAMisdemeanor",
+        "ClassBMisdemeanor",
+        "ClassCMisdemeanor",
+        "Infraction",
+        "DrugPossessionOffense"
+    ]
+}

@@ -12,7 +12,7 @@ import generateYearRange from '../helpers/generateYearRange';
 
 function ScenarioForm() {
 
-    const { addScenario } = useAppState();
+    const { addScenario, scenarios } = useAppState();
 
     const [types, setTypes] = useState([]);
     const [convictionType, setConvictionType] = useState('');
@@ -21,6 +21,9 @@ function ScenarioForm() {
     const currentYear = new Date().getFullYear();
     const years = generateYearRange(1960, currentYear);
     const [selectedYear, setSelectedYear] = useState('');
+    const [isChecked, setIsChecked] = useState(false);
+    const [isChecked1, setIsChecked1] = useState(false);
+    const [isChecked2, setIsChecked2] = useState(false);
 
     useEffect(() => {
         fetch('./law.json')
@@ -46,12 +49,29 @@ function ScenarioForm() {
         setSelectedYear(event.target.value); 
     };
 
+    const handleCheckboxChange = (event) => {
+        setIsChecked(event.target.checked);
+    };
+
+    const handleCheckboxChange1 = (event) => {
+        setIsChecked1(event.target.checked);
+    };
+
+    const handleCheckboxChange2 = (event) => {
+        setIsChecked2(event.target.checked);
+    };
+
     const handleAdd = () => {
-        if(convictionType != '' && selectedYear != ''){
-            const result = {type: convictionType, year: selectedYear}
+        if (convictionType != '' && selectedYear != '') {
+            const count = scenarios.length;
+            const id = `Date$${count}`;
+            const result = { id: id, type: convictionType, year: selectedYear, assaultive: isChecked, tenner: isChecked1, owi: isChecked2 };
             addScenario(result);
             setConvictionType('');
             setSelectedYear('');
+            setIsChecked(false);
+            setIsChecked1(false);
+            setIsChecked2(false);
         }
     };
 
@@ -75,7 +95,7 @@ function ScenarioForm() {
                         <Row className="align-items-center">
                             <Col xs={10}>
                                 <Row>
-                                    <Col>
+                                    <Col xs={3}>
                                         <Form.Select value={convictionType} onChange={handleConvictionTypeChange}>
                                             <option value="">Select Conviction Type</option>
                                             {types?.map((type, index) => (
@@ -83,13 +103,34 @@ function ScenarioForm() {
                                             ))}
                                         </Form.Select>
                                     </Col>
-                                    <Col>
+                                    <Col xs={3}>
                                         <Form.Select value={selectedYear} onChange={handleYearChange}>
                                             <option value="">Select Year</option>
                                             {years.map(year => (
                                                 <option key={year} value={year}>{year}</option>
                                             ))}
                                         </Form.Select>
+                                    </Col>
+                                    <Col xs={2}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Assaultive"
+                                            onChange={handleCheckboxChange}
+                                        />
+                                    </Col>
+                                    <Col xs={2}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="TenYearFelony"
+                                            onChange={handleCheckboxChange1}
+                                        />
+                                    </Col>
+                                    <Col xs={2}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="OWI"
+                                            onChange={handleCheckboxChange2}
+                                        />
                                     </Col>
                                 </Row>
                             </Col>
