@@ -127,16 +127,13 @@ function ScenarioResult() {
             };
 
             // Make the API call
-            fetch(
-                "https://ec2-13-58-136-200.us-east-2.compute.amazonaws.com:8443/api/alloy/run",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(payload),
-                }
-            )
+            fetch("http://ec2-13-58-136-200.us-east-2.compute.amazonaws.com:8080/api/alloy/run", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            })
                 .then((response) => response.json())
                 .then((data) => {
                     setResult(data); // Save the result to the state
