@@ -34,6 +34,8 @@ export const AppStateProvider = ({ children }) => {
     return savedScenarios ? JSON.parse(savedScenarios) : [];
   });
 
+  const [showResult, setShowResult] = useState(false);
+
   useEffect(() => {
     localStorage.setItem('ConvictionContext', JSON.stringify(convictions));
     localStorage.setItem('RangesContext', JSON.stringify(dateRanges.sort((a, b) => parseInt(a.range) - parseInt(b.range))));
@@ -64,7 +66,6 @@ export const AppStateProvider = ({ children }) => {
     const filteredRanges = dateRanges.filter((_, idx) => idx !== index);
     setDateRanges(filteredRanges);
   };
-
 
   const addWaitingPeriod = (range) => {
     setWaitingPeriods([...waitingPeriods, range]);
@@ -111,7 +112,9 @@ export const AppStateProvider = ({ children }) => {
     deleteLimit,
     scenarios,
     addScenario,
-    deleteScenario
+    deleteScenario,
+    showResult,
+    setShowResult
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

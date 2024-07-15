@@ -20,6 +20,7 @@ function ScenarioForm() {
     const [states, setStates] = useState([]); 
     const currentYear = new Date().getFullYear();
     const years = generateYearRange(1960, currentYear);
+    years.sort((a, b) => b - a);
     const [selectedYear, setSelectedYear] = useState('');
     const [isChecked, setIsChecked] = useState(false);
     const [isChecked1, setIsChecked1] = useState(false);
@@ -92,10 +93,10 @@ function ScenarioForm() {
                         </Col>
                     </Row>
                     {state != '' && (
-                        <Row className="align-items-center">
-                            <Col xs={10}>
+                        <Row className="">
+                            <Col xs={9}>
                                 <Row>
-                                    <Col xs={3}>
+                                    <Col xs={6}>
                                         <Form.Select value={convictionType} onChange={handleConvictionTypeChange}>
                                             <option value="">Select Conviction Type</option>
                                             {types?.map((type, index) => (
@@ -103,7 +104,7 @@ function ScenarioForm() {
                                             ))}
                                         </Form.Select>
                                     </Col>
-                                    <Col xs={3}>
+                                    <Col xs={6}>
                                         <Form.Select value={selectedYear} onChange={handleYearChange}>
                                             <option value="">Select Year</option>
                                             {years.map(year => (
@@ -111,30 +112,37 @@ function ScenarioForm() {
                                             ))}
                                         </Form.Select>
                                     </Col>
-                                    <Col xs={2}>
+                                    <Col xs={3} className="mt-2">
                                         <Form.Check
                                             type="checkbox"
                                             label="Assaultive"
+                                            checked={isChecked}
                                             onChange={handleCheckboxChange}
                                         />
                                     </Col>
-                                    <Col xs={2}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label="TenYearFelony"
-                                            onChange={handleCheckboxChange1}
-                                        />
-                                    </Col>
-                                    <Col xs={2}>
-                                        <Form.Check
-                                            type="checkbox"
-                                            label="OWI"
-                                            onChange={handleCheckboxChange2}
-                                        />
-                                    </Col>
+                                    {convictionType.toLowerCase() === 'felony' && (
+                                        <Col xs={3} className="mt-2">
+                                            <Form.Check
+                                                type="checkbox"
+                                                label="TenYearFelony"
+                                                checked={isChecked1}
+                                                onChange={handleCheckboxChange1}
+                                            />
+                                        </Col>
+                                    )}
+                                    {convictionType.toLowerCase() === 'misdemeanor' && (
+                                        <Col xs={3} className="mt-2">
+                                            <Form.Check
+                                                type="checkbox"
+                                                label="OWI"
+                                                checked={isChecked2}
+                                                onChange={handleCheckboxChange2}
+                                            />
+                                        </Col>
+                                    )}
                                 </Row>
                             </Col>
-                            <Col xs={2}>
+                            <Col xs={3}>
                                 <Button onClick={handleAdd} variant="outline-primary" className="w-100"> Add </Button>
                             </Col>
                         </Row>

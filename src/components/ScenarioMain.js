@@ -12,14 +12,18 @@ import ScenarioResult from "./ScenarioResult";
 import { useState } from "react";
 
 function ScenarioMain() {
-    const { scenarios, deleteScenario } = useAppState();
+    const { scenarios, deleteScenario, showResult, setShowResult } = useAppState();
 
-    const showResult = () => {
+    const checkResult = () => {
         if (scenarios.length === 0) {
             alert("You haven't setup any scenario yet!");
         } else {
-            window.location.href = "/scenario/result";
+            setShowResult(true);
         }
+    }
+
+    const goBack = () => {
+        setShowResult(false);
     }
 
     return (
@@ -60,9 +64,15 @@ function ScenarioMain() {
                     ))}
                 </tbody>
             </Table>
-            <Button variant="primary" onClick={showResult}>
+            {showResult ? (
+                <Button variant="primary" onClick={goBack}>
+                Go Back
+                </Button>
+            ):(
+                <Button variant="primary" onClick={checkResult}>
                 Check Result
-            </Button>
+                </Button>
+            )}
         </div>
     );
 };

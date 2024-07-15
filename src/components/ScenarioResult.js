@@ -9,6 +9,7 @@ import { useAppState } from "../store/AppStateContext";
 import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import ScenarioVisual from "./ScenarioVisual";
+import ScenarioMain from "./ScenarioMain";
 
 function ScenarioResult() {
     const { scenarios, deleteScenario } = useAppState();
@@ -127,7 +128,7 @@ function ScenarioResult() {
             };
 
             // Make the API call
-            fetch("http://ec2-13-58-136-200.us-east-2.compute.amazonaws.com:8080/api/alloy/run", {
+            fetch("http://localhost:8080/api/alloy/run", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -136,7 +137,7 @@ function ScenarioResult() {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    setResult(data); // Save the result to the state
+                    setResult(data);
                     console.log("Success:", data);
                 })
                 .catch((error) => {
@@ -159,18 +160,6 @@ function ScenarioResult() {
     return (
         <Container fluid>
             <Row style={{ height: "100vh" }}>
-                <Col
-                    className="p-3"
-                    style={{
-                        height: "100%",
-                        overflowY: "auto",
-                        background: "#474c57",
-                    }}
-                >
-                    <div className="p-5">
-                        <ScenarioVisual />
-                    </div>
-                </Col>
                 <Col
                     className="p-3"
                     style={{
@@ -199,7 +188,7 @@ function ScenarioResult() {
                                                                         scenario.id
                                                                     )
                                                                         ? "green"
-                                                                        : "white",
+                                                                        : "grey",
                                                             }}
                                                         >
                                                             <h3 className="title">
@@ -207,6 +196,17 @@ function ScenarioResult() {
                                                             </h3>
                                                             <p className="description">
                                                                 {scenario?.type}
+                                                            </p>
+                                                            <p className="mt-2">
+                                                                {(() => {
+                                                                    const labels = [
+                                                                    scenario?.tenner && "TenYearFelony",
+                                                                    scenario?.assaultive && "Assaultive",
+                                                                    scenario?.owi && "OWI"
+                                                                    ].filter(Boolean);
+
+                                                                    return labels.length > 0 ? `(${labels.join(", ")})` : '';
+                                                                })()}
                                                             </p>
                                                         </div>
                                                     </div>

@@ -7,8 +7,12 @@ import { useState } from "react";
 import { Alert, Col, Container, Row } from "react-bootstrap";
 import ScenarioMain from "../components/ScenarioMain";
 import ScenarioVisual from "../components/ScenarioVisual";
+import { useAppState } from "../store/AppStateContext";
+import ScenarioResult from "../components/ScenarioResult";
 
 export default function Scenario() {
+
+    const { showResult } = useAppState();
 
     return (
         <Container fluid>
@@ -28,7 +32,7 @@ export default function Scenario() {
             </Col>
             <Col className="p-3" style={{ height: "100%", overflowY: "auto", background: "#f1f4fb" }}>
                 <div className="p-5">
-                    <ScenarioVisual />
+                    {showResult ? <ScenarioResult /> : <ScenarioVisual />}
                 </div>
             </Col>
         </Row>

@@ -17,7 +17,6 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="alloy-generator" element={<Generator />} />
         <Route path="scenario" element={<Scenario />} />
-        <Route path="scenario/result" element={<ScenarioResult />} />
       </Routes>
     </BrowserRouter>
   );

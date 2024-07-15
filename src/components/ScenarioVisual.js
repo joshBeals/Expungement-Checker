@@ -16,6 +16,7 @@ function ScenarioVisual() {
         return a.year - b.year;
     });
 
+    console.log(scenarios);
 
     return(
         <div className="container">
@@ -27,6 +28,17 @@ function ScenarioVisual() {
                                 <div className="timeline-content">
                                     <h3 className="title">{scenario?.year}</h3>
                                     <p className="description">{scenario?.type}</p>
+                                    <p className="mt-2">
+                                        {(() => {
+                                            const labels = [
+                                            scenario?.tenner && "TenYearFelony",
+                                            scenario?.assaultive && "Assaultive",
+                                            scenario?.owi && "OWI"
+                                            ].filter(Boolean);
+
+                                            return labels.length > 0 ? `(${labels.join(", ")})` : '';
+                                        })()}
+                                    </p>
                                 </div>
                             </div>
                         ))}
