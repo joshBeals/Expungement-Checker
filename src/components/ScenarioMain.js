@@ -5,24 +5,33 @@
  */
 
 import { Trash } from "react-bootstrap-icons";
-import { Alert, Button, Table } from "react-bootstrap";
+import { Alert, Button, Table, Row, Col, Form, Card } from "react-bootstrap";
 import ScenarioForm from "../forms/ScenarioForm";
 import { useAppState } from "../store/AppStateContext";
 import ScenarioResult from "./ScenarioResult";
 import { useState } from "react";
 
 function ScenarioMain() {
-    const { scenarios, deleteScenario, showResult, setShowResult } = useAppState();
+    const { scenarios, deleteScenario, showResult, setShowResult, interpretation, setInterpretation } = useAppState();
+
+    const handleInterpretationChange = (e) => {
+        setInterpretation(e.target.value);
+    }
 
     const checkResult = () => {
         if (scenarios.length === 0) {
             alert("You haven't setup any scenario yet!");
         } else {
-            setShowResult(true);
+            if (interpretation == '') {
+                alert("Please Select Interpretation!");
+            } else {
+                setShowResult(true);
+            }
         }
     }
 
     const goBack = () => {
+        setInterpretation('');
         setShowResult(false);
     }
 
@@ -64,15 +73,30 @@ function ScenarioMain() {
                     ))}
                 </tbody>
             </Table>
-            {showResult ? (
-                <Button variant="primary" onClick={goBack}>
-                Go Back
-                </Button>
-            ):(
-                <Button variant="primary" onClick={checkResult}>
-                Check Result
-                </Button>
-            )}
+            
+            <Card>
+                <Card.Body>
+                    <Row className="mb-2">
+                        <Col xs={12}>
+                            <Form.Label>Choose Interpretation</Form.Label>
+                            <Form.Select value={interpretation} onChange={handleInterpretationChange} disabled={interpretation !== ""}>
+                                <option>Select Interpretation</option>
+                                <option key="forward" value="forward">Forward Waiting</option>
+                                <option key="backward" value="backward">Backward Waiting</option>
+                            </Form.Select>
+                        </Col>
+                    </Row>
+                    {showResult ? (
+                        <Button variant="primary" onClick={goBack}>
+                        Go Back
+                        </Button>
+                    ):(
+                        <Button variant="primary" onClick={checkResult}>
+                        Check Result
+                        </Button>
+                    )}
+                </Card.Body>
+            </Card>
         </div>
     );
 };

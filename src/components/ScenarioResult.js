@@ -12,7 +12,7 @@ import ScenarioVisual from "./ScenarioVisual";
 import ScenarioMain from "./ScenarioMain";
 
 function ScenarioResult() {
-    const { scenarios, deleteScenario } = useAppState();
+    const { scenarios, deleteScenario, interpretation } = useAppState();
     const [result, setResult] = useState(null);
 
     console.log(scenarios);
@@ -103,9 +103,9 @@ function ScenarioResult() {
     }
 
     function determineTemporalRelation(yearDifference) {
-        if (yearDifference <= 3) {
+        if (yearDifference < 3) {
             return "withinThree";
-        } else if (yearDifference <= 5) {
+        } else if (yearDifference < 5) {
             return "withinFive";
         } else {
             return "beyondFive";
@@ -124,7 +124,8 @@ function ScenarioResult() {
                 predicate: alloyPredicate,
                 run: `run userDefinedPredicate for ${
                     scenarios.length + 1
-                } Event, ${scenarios.length + 1} Date`,
+                    } Event, ${scenarios.length + 1} Date`,
+                type: interpretation
             };
 
             // Make the API call

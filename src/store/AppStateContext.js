@@ -35,6 +35,7 @@ export const AppStateProvider = ({ children }) => {
   });
 
   const [showResult, setShowResult] = useState(false);
+  const [interpretation, setInterpretation] = useState('');
 
   useEffect(() => {
     localStorage.setItem('ConvictionContext', JSON.stringify(convictions));
@@ -114,7 +115,9 @@ export const AppStateProvider = ({ children }) => {
     addScenario,
     deleteScenario,
     showResult,
-    setShowResult
+    setShowResult,
+    interpretation,
+    setInterpretation
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;
