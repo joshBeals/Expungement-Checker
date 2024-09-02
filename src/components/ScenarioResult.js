@@ -61,10 +61,10 @@ function ScenarioResult() {
                 }
             }
             if (conviction?.type == "Misdemeanor") {
-                if(conviction?.tenner) {
-                    temp += ` and (not c${index + 1} in OWI)`;
-                } else {
+                if(conviction?.owi) {
                     temp += ` and (c${index + 1} in OWI)`;
+                } else {
+                    temp += ` and (not c${index + 1} in OWI)`;
                 }
             }
             conditions.push(`${temp})`);
@@ -262,7 +262,7 @@ function ScenarioResult() {
                                                                     })()}
                                                                 </p>
                                                                 {/* Display Violations */}
-                                                                {scenarioViolations.length > 0 && (
+                                                                {(scenarioViolations.length > 0 && !isExpunged(scenario.id)) && (
                                                                     <Button onClick={() => updateModal(scenarioViolations)} variant="secondary"> View Reason </Button>
                                                                 )}
                                                             </div>
