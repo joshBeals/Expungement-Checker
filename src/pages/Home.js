@@ -22,11 +22,14 @@ export default function Home() {
               </p>
             </Alert>
             <Row>
-              <Col>
+              <Col lg={6} md={6}>
                 <Button className="w-100" size="lg" variant="outline-success" href="/alloy-generator">Create Model</Button>
               </Col>
-              <Col>
-                <Button className="w-100" size="lg" variant="outline-danger" href="/scenario">Create Scenarios</Button>
+              <Col lg={6} md={6}>
+                <Button className="w-100" size="lg" variant="outline-danger" href="/scenario">Expungement Checker</Button>
+              </Col>
+              <Col lg={6} md={6} className="mt-3">
+                <Button className="w-100" size="lg" variant="outline-primary" href="/underspecified-scenario">Underspecified Scenarios</Button>
               </Col>
             </Row>
           </Col>

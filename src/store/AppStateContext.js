@@ -33,6 +33,10 @@ export const AppStateProvider = ({ children }) => {
     const savedScenarios = localStorage.getItem('scenarios');
     return savedScenarios ? JSON.parse(savedScenarios) : [];
   });
+  const [u_scenarios, setUScenarios] = useState(() => {
+    const savedScenarios = localStorage.getItem('u_scenarios');
+    return savedScenarios ? JSON.parse(savedScenarios) : [];
+  });
 
   const [showResult, setShowResult] = useState(false);
   const [interpretation, setInterpretation] = useState('');
@@ -44,7 +48,8 @@ export const AppStateProvider = ({ children }) => {
     localStorage.setItem('totalLimit', totalLimit);
     localStorage.setItem('limits', JSON.stringify(limits));
     localStorage.setItem('scenarios', JSON.stringify(scenarios));
-  }, [convictions, dateRanges, waitingPeriods, totalLimit, limits, scenarios]);
+    localStorage.setItem('u_scenarios', JSON.stringify(u_scenarios));
+  }, [convictions, dateRanges, waitingPeriods, totalLimit, limits, scenarios, u_scenarios]);
 
   // Function to add a conviction
   const addConviction = (conviction) => {
@@ -90,9 +95,18 @@ export const AppStateProvider = ({ children }) => {
     setScenarios([...scenarios, scenario]);
   };
 
+  const addUScenario = (scenario) => {
+    setUScenarios([...scenarios, scenario]);
+  };
+
   const deleteScenario = (index) => {
     const filteredRanges = scenarios.filter((_, idx) => idx !== index);
     setScenarios(filteredRanges);
+  };
+
+  const deleteUScenario = (index) => {
+    const filteredRanges = u_scenarios.filter((_, idx) => idx !== index);
+    setUScenarios(filteredRanges);
   };
 
   // Value to be passed to consuming components
@@ -117,7 +131,10 @@ export const AppStateProvider = ({ children }) => {
     showResult,
     setShowResult,
     interpretation,
-    setInterpretation
+    setInterpretation,
+    u_scenarios,
+    addUScenario,
+    deleteUScenario
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

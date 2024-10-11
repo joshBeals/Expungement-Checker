@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Generator from "./pages/Generator";
 import Scenario from "./pages/Scenario";
 import ScenarioResult from "./components/ScenarioResult";
+import UnderspecifiedScenario from "./pages/UnderspecifiedScenario";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="alloy-generator" element={<Generator />} />
         <Route path="scenario" element={<Scenario />} />
+        <Route path="underspecified-scenario" element={<UnderspecifiedScenario />} />
       </Routes>
     </BrowserRouter>
   );
