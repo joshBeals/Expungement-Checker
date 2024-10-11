@@ -1,3 +1,9 @@
+/**
+ * Joshua Alele-Beals
+ * joshbeals22@gmail.com
+ * github.com/joshBeals
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import generateYearRange from '../../helpers/generateYearRange';
@@ -22,7 +28,7 @@ const UnderScenarioForm = () => {
     const [yearType, setYearType] = useState('');
     const [question, setQuestion] = useState('');
     
-    const { scenarios, u_scenarios } = useAppState();
+    const { addUScenario, u_scenarios } = useAppState();
 
     useEffect(() => {
         fetch('./law.json')
@@ -77,7 +83,21 @@ const UnderScenarioForm = () => {
     };
 
     const handleAdd = () => {
-
+        if (endYear < startYear) {
+            alert("Range not setup properly!")
+        } else {
+            const result = { type: convictionType, yearType: yearType, year: selectedYear, startYear: startYear, endYear, endYear, assaultive: isChecked, tenner: isChecked1, owi: isChecked2, question: question };
+            addUScenario(result);
+            setConvictionType('');
+            setSelectedYear('');
+            setEndYear('');
+            setStartYear('');
+            setYearType('');
+            setQuestion('');
+            setIsChecked(false);
+            setIsChecked1(false);
+            setIsChecked2(false);
+        }
     };
 
     return (

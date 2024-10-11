@@ -96,7 +96,7 @@ export const AppStateProvider = ({ children }) => {
   };
 
   const addUScenario = (scenario) => {
-    setUScenarios([...scenarios, scenario]);
+    setUScenarios([...u_scenarios, scenario]);
   };
 
   const deleteScenario = (index) => {
