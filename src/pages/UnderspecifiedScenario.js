@@ -1,8 +1,20 @@
+/**
+ * Joshua Alele-Beals
+ * joshbeals22@gmail.com
+ * github.com/joshBeals
+ */
+
 import React from 'react';
 import { Alert, Col, Container, Row } from "react-bootstrap";
 import UnderScenarioMain from '../components/underspecified/UnderScenarioMain';
+import { useAppState } from '../store/AppStateContext';
+import UnderScenarioResult from '../components/underspecified/UnderScenarioResult';
+import UnderScenarioVisual from '../components/underspecified/UnderScenarioVisual';
 
 const UnderspecifiedScenario = () => {
+
+    const { showUResult } = useAppState();
+
     return (
         <>
             <Container fluid>
@@ -22,7 +34,7 @@ const UnderspecifiedScenario = () => {
                 </Col>
                 <Col className="p-3" style={{ height: "100%", overflowY: "auto", background: "#f1f4fb" }}>
                     <div className="p-5">
-                        
+                        {showUResult ? <UnderScenarioResult /> : <UnderScenarioVisual />}
                     </div>
                 </Col>
             </Row>

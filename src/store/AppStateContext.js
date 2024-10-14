@@ -39,6 +39,7 @@ export const AppStateProvider = ({ children }) => {
   });
 
   const [showResult, setShowResult] = useState(false);
+  const [showUResult, setShowUResult] = useState(false);
   const [interpretation, setInterpretation] = useState('');
 
   useEffect(() => {
@@ -96,8 +97,38 @@ export const AppStateProvider = ({ children }) => {
   };
 
   const addUScenario = (scenario) => {
-    setUScenarios([...u_scenarios, scenario]);
+    const updatedScenarios = [...u_scenarios, scenario]; // Add the new scenario
+  
+    const sortedConvictions = updatedScenarios.sort((a, b) => {
+      const getComparableDate = (conviction) => {
+        if (conviction.year) {
+          return parseInt(conviction.year, 10); // Fixed year
+        } else if (conviction.startYear) {
+          return parseInt(conviction.startYear, 10); // Start of range
+        }
+        return Infinity; // No date specified
+      };
+  
+      // If both convictions lack dates, treat them as equal (no change in order)
+      if (!a.year && !a.startYear && !b.year && !b.startYear) {
+        return 0;
+      }
+  
+      // If only one of the convictions lacks a date, place it after the other
+      if (!a.year && !a.startYear) {
+        return 1; // `a` goes after `b`
+      }
+      if (!b.year && !b.startYear) {
+        return -1; // `b` goes after `a`
+      }
+  
+      // Otherwise, compare based on the dates
+      return getComparableDate(a) - getComparableDate(b);
+    });
+  
+    setUScenarios(sortedConvictions); // Update the state with the sorted scenarios
   };
+  
 
   const deleteScenario = (index) => {
     const filteredRanges = scenarios.filter((_, idx) => idx !== index);
@@ -107,6 +138,10 @@ export const AppStateProvider = ({ children }) => {
   const deleteUScenario = (index) => {
     const filteredRanges = u_scenarios.filter((_, idx) => idx !== index);
     setUScenarios(filteredRanges);
+  };
+  
+  const reorderUScenarios = (newOrder) => {
+    setUScenarios(newOrder);
   };
 
   // Value to be passed to consuming components
@@ -134,7 +169,10 @@ export const AppStateProvider = ({ children }) => {
     setInterpretation,
     u_scenarios,
     addUScenario,
-    deleteUScenario
+    deleteUScenario,
+    reorderUScenarios,
+    showUResult,
+    setShowUResult,
   };
 
   return <AppStateContext.Provider value={value}>{children}</AppStateContext.Provider>;

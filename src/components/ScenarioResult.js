@@ -22,8 +22,6 @@ function ScenarioResult() {
     const { scenarios, deleteScenario, interpretation } = useAppState();
     const [result, setResult] = useState(null);
 
-    console.log(scenarios);
-
     function generateAlloyPredicate(data) {
         if (data.length < 1) {
             throw new Error("The input data must contain at least one item.");
@@ -112,14 +110,19 @@ function ScenarioResult() {
     function determineTemporalRelation(yearDifference) {
         if (yearDifference < 3) {
             return "withinThree";
+        } else if (yearDifference > 3 && yearDifference < 5) {
+            return "beyondThree";
         } else if (yearDifference < 5) {
-            return "withinFive";
-        } else {
+            return "withinFive"
+        } else{
             return "beyondFive";
         }
     }
 
-    const alloyPredicate = generateAlloyPredicate(scenarios);
+    // Sort scenarios by year
+    const sortedScenarios = scenarios.slice().sort((a, b) => a.year - b.year);
+
+    const alloyPredicate = generateAlloyPredicate(sortedScenarios);
     console.log(alloyPredicate);
 
     useEffect(() => {
@@ -153,9 +156,6 @@ function ScenarioResult() {
                 });
         }
     }, [scenarios]);
-
-    // Sort scenarios by year
-    const sortedScenarios = scenarios.slice().sort((a, b) => a.year - b.year);
 
     // Function to check if a scenario is expunged
     const isExpunged = (scenarioDate) => {
@@ -223,7 +223,7 @@ function ScenarioResult() {
                                                     .flatMap(([violationType, violations]) =>
                                                         violations
                                                             .filter(violation => 
-                                                                Object.values(violation).includes(scenario.id)
+                                                                Object.values(violation).includes(`Date$${index}`)
                                                             )
                                                             .map(() => violationType)
                                                     );
@@ -238,7 +238,7 @@ function ScenarioResult() {
                                                                 style={{
                                                                     backgroundColor:
                                                                         isExpunged(
-                                                                            scenario.id
+                                                                            `Date$${index}`
                                                                         )
                                                                             ? "green"
                                                                             : "grey",
@@ -262,7 +262,7 @@ function ScenarioResult() {
                                                                     })()}
                                                                 </p>
                                                                 {/* Display Violations */}
-                                                                {(scenarioViolations.length > 0 && !isExpunged(scenario.id)) && (
+                                                                {(scenarioViolations.length > 0 && !isExpunged(`Date$${index}`)) && (
                                                                     <Button onClick={() => updateModal(scenarioViolations)} variant="secondary"> View Reason </Button>
                                                                 )}
                                                             </div>

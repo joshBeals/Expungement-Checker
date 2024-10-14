@@ -31,9 +31,9 @@ function ScenarioVisual() {
                                     <p className="mt-2">
                                         {(() => {
                                             const labels = [
-                                            scenario?.tenner && "TenYearFelony",
-                                            scenario?.assaultive && "Assaultive",
-                                            scenario?.owi && "OWI"
+                                                scenario?.tenner && "TenYearFelony",
+                                                scenario?.assaultive && "Assaultive",
+                                                scenario?.owi && "OWI"
                                             ].filter(Boolean);
 
                                             return labels.length > 0 ? `(${labels.join(", ")})` : '';

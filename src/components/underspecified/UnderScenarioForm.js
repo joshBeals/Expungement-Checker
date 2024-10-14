@@ -83,10 +83,28 @@ const UnderScenarioForm = () => {
     };
 
     const handleAdd = () => {
-        if (endYear < startYear) {
-            alert("Range not setup properly!")
-        } else {
-            const result = { type: convictionType, yearType: yearType, year: selectedYear, startYear: startYear, endYear, endYear, assaultive: isChecked, tenner: isChecked1, owi: isChecked2, question: question };
+        let error = false;
+        let errorMessage = "";
+
+        if (yearType == 'range') {
+            if (startYear == '' || endYear == '') {
+                error = true;
+                errorMessage = "Please pick date range!";
+            }
+            if ((parseInt(endYear, 10) < parseInt(startYear, 10))) {
+                error = true;
+                errorMessage = "End year has to be greater than Start year";
+            }
+        }
+        
+        if (yearType == 'single' && selectedYear == '') {
+            error = true;
+            errorMessage = "Please pick a year!";
+        }
+
+        if (!error) {
+            const count = u_scenarios.length;
+            const result = { id: count, type: convictionType, yearType: yearType, year: selectedYear, startYear: startYear, endYear, endYear, assaultive: isChecked, tenner: isChecked1, owi: isChecked2, question: question };
             addUScenario(result);
             setConvictionType('');
             setSelectedYear('');
@@ -97,6 +115,8 @@ const UnderScenarioForm = () => {
             setIsChecked(false);
             setIsChecked1(false);
             setIsChecked2(false);
+        } else {
+            alert(errorMessage);
         }
     };
 
