@@ -118,6 +118,7 @@ export const AppStateProvider = ({ children }) => {
       if (!a.year && !a.startYear) {
         return 1; // `a` goes after `b`
       }
+      
       if (!b.year && !b.startYear) {
         return -1; // `b` goes after `a`
       }

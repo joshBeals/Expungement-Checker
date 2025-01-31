@@ -185,7 +185,7 @@ function ScenarioResult() {
         
 
         if (violation === "sec1dTimingViolations") {
-            return "A new conviction occurred within the required waiting period. For misdemeanors, the mandatory waiting period is 3 years, while for felonies, it is 5 years. This timing violation indicates that the time elapsed between the convictions was insufficient to meet the legal expungement criteria.";
+            return "A new conviction or expungement event occurred within the required waiting period. For misdemeanors, the mandatory waiting period is 3 years, while for felonies, it is 5 years. This timing violation indicates that the time elapsed between the convictions was insufficient to meet the legal expungement criteria.";
         }
         
 

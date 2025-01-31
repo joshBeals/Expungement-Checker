@@ -41,6 +41,7 @@ function ScenarioMain() {
             <Table
                 striped
                 bordered
+                responsive
                 className="mt-3"
                 style={{ borderRadius: "20px" }}
             >
