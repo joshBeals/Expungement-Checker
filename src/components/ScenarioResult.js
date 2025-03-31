@@ -35,8 +35,8 @@ function ScenarioResult() {
         let alloyStringWithExpungement = "one ";
         let conditions = [];
         let temporalConditions = [];
-        let hbConditions = [];
         let expungementConditions = [];
+        let forced = [];
 
         data.forEach((conviction, index) => {
             alloyStringWithExpungement += `c${index + 1}: Conviction`;
@@ -66,29 +66,29 @@ function ScenarioResult() {
                 }
             }
             conditions.push(`${temp})`);
-            if (index > 0) {
-                const yearDifference =
-                    parseInt(data[index].year, 10) -
-                    parseInt(data[index - 1].year, 10);
-                const temporalRelation =
-                    determineTemporalRelation(yearDifference);
-                temporalConditions.push(
-                    `c${index + 1}.date in c${index}.date.${temporalRelation}`
-                );
-                hbConditions.push(`happensBefore[c${index}, c${index + 1}]`);
+            temporalConditions.push(`(c${index + 1}.date = d${conviction?.year})`);
+
+            // Determine temporal relations (excluding unspecified)
+            if (index > 0 && data?.length > index) {
+                const prevConviction = data[index - 1];
+                const currentConviction = data[index];
+            
+                if (prevConviction && currentConviction) {
+                    let forcedTemp = [];
+            
+                    // Ensure uniqueness without redundant conditions (c2 != c1 is implied by c1 != c2)
+                    for (let i = 0; i < index; i++) { // Loop only over previous convictions
+                        forcedTemp.push(`(c${index + 1} != c${i + 1})`);
+                    }
+            
+                    if (forcedTemp.length > 0) {
+                        forced.push(`(${forcedTemp.join(' and ')})`);
+                    }
+                }
             }
         });
-
-        hbConditions.push(`happensBefore[c${data.length}, exp]`);
-        expungementConditions.push(
-            data.map(
-                (dat, i) =>
-                    `exp.date in c${i + 1}.date.${determineTemporalRelation(
-                        currentYear - dat.year
-                    )}`
-            )
-            .join(" and \n")
-        );
+    
+        temporalConditions.push(`exp.date = d2025`);
         expungementConditions.push(
             data
                 .map(
@@ -99,24 +99,12 @@ function ScenarioResult() {
         );
 
         alloyStringWithExpungement += conditions.join(" and \n") + " and \n";
-        alloyStringWithExpungement += hbConditions.join(" and \n") + " and \n";
+        alloyStringWithExpungement += forced.join(" and \n") + " and \n";
         alloyStringWithExpungement +=
             temporalConditions.join(" and \n") + " and \n";
         alloyStringWithExpungement += expungementConditions.join(" and \n");
 
         return alloyStringWithExpungement + "\n";
-    }
-
-    function determineTemporalRelation(yearDifference) {
-        if (yearDifference < 3) {
-            return "withinThree";
-        } else if (yearDifference > 3 && yearDifference < 5) {
-            return "beyondThree";
-        } else if (yearDifference < 5) {
-            return "withinFive"
-        } else{
-            return "beyondFive";
-        }
     }
 
     // Sort scenarios by year
@@ -223,7 +211,7 @@ function ScenarioResult() {
                                                     .flatMap(([violationType, violations]) =>
                                                         violations
                                                             .filter(violation => 
-                                                                Object.values(violation).includes(`Date$${index}`)
+                                                                Object.values(violation).includes(`d${scenario?.year}$0`)
                                                             )
                                                             .map(() => violationType)
                                                     );
@@ -238,7 +226,7 @@ function ScenarioResult() {
                                                                 style={{
                                                                     backgroundColor:
                                                                         isExpunged(
-                                                                            `Date$${index}`
+                                                                            `d${scenario?.year}$0`
                                                                         )
                                                                             ? "green"
                                                                             : "grey",
@@ -262,7 +250,7 @@ function ScenarioResult() {
                                                                     })()}
                                                                 </p>
                                                                 {/* Display Violations */}
-                                                                {(scenarioViolations.length > 0 && !isExpunged(`Date$${index}`)) && (
+                                                                {(scenarioViolations.length > 0 && !isExpunged(`d${scenario?.year}$0`)) && (
                                                                     <Button onClick={() => updateModal(scenarioViolations)} variant="secondary"> View Reason </Button>
                                                                 )}
                                                             </div>
