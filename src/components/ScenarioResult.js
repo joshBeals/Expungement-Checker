@@ -89,20 +89,20 @@ function ScenarioResult() {
         });
     
         temporalConditions.push(`exp.date = d2025`);
-        expungementConditions.push(
-            data
-                .map(
-                    (_, i) =>
-                        `(expungeable[c${i + 1}, exp] implies c${i + 1} in exp.con)`
-                )
-                .join(" and ")
-        );
+        // expungementConditions.push(
+        //     data
+        //         .map(
+        //             (_, i) =>
+        //                 `(expungeable[c${i + 1}, exp] implies c${i + 1} in exp.con)`
+        //         )
+        //         .join(" and ")
+        // );
 
         alloyStringWithExpungement += conditions.join(" and \n") + " and \n";
-        alloyStringWithExpungement += forced.join(" and \n") + " and \n";
+        if (forced.length > 0) alloyStringWithExpungement += forced.join(" and \n") + " and \n";
         alloyStringWithExpungement +=
-            temporalConditions.join(" and \n") + " and \n";
-        alloyStringWithExpungement += expungementConditions.join(" and \n");
+            temporalConditions.join(" and \n");
+        // alloyStringWithExpungement += expungementConditions.join(" and \n");
 
         return alloyStringWithExpungement + "\n";
     }
@@ -127,7 +127,7 @@ function ScenarioResult() {
             };
 
             // Make the API call
-            fetch("http://localhost:8080/api/alloy/run", {
+            fetch("http://localhost:8080/api/alloy/evaluate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -189,118 +189,128 @@ function ScenarioResult() {
 
     return (
         <Container fluid>
-            <Row style={{ height: "100vh" }}>
-                <Col
-                    className="p-3"
-                    style={{
-                        height: "100%",
-                        overflowY: "auto",
-                        background: "#f1f4fb",
-                    }}
-                >
-                    <div>
-                        {result ? (
-                            <div className="container">
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <div className="Yearly-timeline">
-                                            {sortedScenarios?.map(
-                                                (scenario, index) => {
-                                                    // Collect violations related to this scenario
-                                                    const scenarioViolations = Object.entries(result.violations)
-                                                    .flatMap(([violationType, violations]) =>
-                                                        violations
-                                                            .filter(violation => 
-                                                                Object.values(violation).includes(`d${scenario?.year}$0`)
-                                                            )
-                                                            .map(() => violationType)
-                                                    );
-
-                                                    return(
-                                                        <div
-                                                            key={index}
-                                                            className="timeline"
-                                                        >
-                                                            <div
-                                                                className="timeline-content"
-                                                                style={{
-                                                                    backgroundColor:
-                                                                        isExpunged(
-                                                                            `d${scenario?.year}$0`
-                                                                        )
-                                                                            ? "green"
-                                                                            : "grey",
-                                                                }}
-                                                            >
-                                                                <h3 className="title">
-                                                                    {scenario?.year}
-                                                                </h3>
-                                                                <p className="description">
-                                                                    {scenario?.type}
-                                                                </p>
-                                                                <p className="mt-2">
-                                                                    {(() => {
-                                                                        const labels = [
-                                                                            scenario?.tenner && "TenYearFelony",
-                                                                            scenario?.assaultive && "Assaultive",
-                                                                            scenario?.owi && "OWI"
-                                                                        ].filter(Boolean);
-
-                                                                        return labels.length > 0 ? `(${labels.join(", ")})` : '';
-                                                                    })()}
-                                                                </p>
-                                                                {/* Display Violations */}
-                                                                {(scenarioViolations.length > 0 && !isExpunged(`d${scenario?.year}$0`)) && (
-                                                                    <Button onClick={() => updateModal(scenarioViolations)} variant="secondary"> View Reason </Button>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    )
-                                                }
-                                            )}
-                                        </div>
-                                    </div>
+          <Row style={{ height: "100vh" }}>
+            <Col
+              className="p-3"
+              style={{ height: "100%", overflowY: "auto", background: "#f1f4fb" }}
+            >
+              <div>
+                {result ? (
+                  <div className="container">
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="Yearly-timeline">
+                          {(() => {
+                            // ---- LOOKUPS FROM result.data ----
+                            const dataRows = Array.isArray(result?.data) ? result.data : [];
+      
+                            const expungedMap = Object.fromEntries(
+                              dataRows.map(d => [d.date, Boolean(d.expunged)])
+                            );
+      
+                            const violationsMap = dataRows.reduce((acc, d) => {
+                              acc[d.date] = Array.isArray(d.violations) ? d.violations : [];
+                              return acc;
+                            }, {});
+      
+                            // ---- TIMELINE ----
+                            return sortedScenarios?.map((scenario, index) => {
+                              const yearKey = `d${scenario?.year}$0`;
+      
+                              const expunged = Object.prototype.hasOwnProperty.call(expungedMap, yearKey)
+                                ? expungedMap[yearKey]
+                                : Boolean(isExpunged?.(yearKey));
+      
+                              const scenarioViolations = violationsMap[yearKey] || [];
+      
+                              return (
+                                <div key={index} className="timeline">
+                                  <div
+                                    className="timeline-content"
+                                    style={{ backgroundColor: expunged ? "green" : "grey" }}
+                                  >
+                                    <h3 className="title">{scenario?.year}</h3>
+                                    <p className="description">{scenario?.type}</p>
+      
+                                    <p className="mt-2">
+                                      {(() => {
+                                        const labels = [
+                                          scenario?.tenner && "TenYearFelony",
+                                          scenario?.assaultive && "Assaultive",
+                                          scenario?.owi && "OWI",
+                                        ].filter(Boolean);
+                                        return labels.length > 0 ? `(${labels.join(", ")})` : "";
+                                      })()}
+                                    </p>
+      
+                                    {/* Button or note depending on violations/expunged */}
+                                    {!expunged &&
+                                      (scenarioViolations.length > 0 ? (
+                                        <Button
+                                          onClick={() => updateModal(scenarioViolations)}
+                                          variant="secondary"
+                                        >
+                                          View Reason
+                                        </Button>
+                                      ) : (
+                                        <p className="text-muted mt-2">No violations recorded</p>
+                                      ))}
+                                  </div>
                                 </div>
-                            </div>
-                        ) : (
-                            <div
-                                style={{
-                                    height: "100%",
-                                    width: "100%",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Spinner animation="border" variant="primary" />
-                            </div>
-                        )}
+                              );
+                            });
+                          })()}
+                        </div>
+                      </div>
                     </div>
-                </Col>
-            </Row>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Violation Reasons</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {modalData.length > 0 ? (
-                        <ul>
-                            {modalData.map((violation, idx) => (
-                                <li key={idx}><span className="fw-bold">{violation.slice(0, -1)}:</span> {getReason(violation)}</li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>No violations found.</p>
-                    )}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Spinner animation="border" variant="primary" />
+                  </div>
+                )}
+              </div>
+            </Col>
+          </Row>
+      
+          <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+              <Modal.Title>Violation Reasons</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {modalData.length > 0 ? (
+                <ul>
+                  {modalData.map((violation, idx) => (
+                    <li key={idx}>
+                      <span className="fw-bold">
+                        {String(violation).replace(/\d+$/, "")}:
+                      </span>{" "}
+                      {getReason(violation)}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No violations found.</p>
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Container>
-    );
+      );
+      
+      
 }
 
 export default ScenarioResult;
