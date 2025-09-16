@@ -159,31 +159,33 @@ function ScenarioResult() {
     }
     
     const getReason = (violation) => {
-        if (violation === "sec1_1bViolations") {
-            return "No more than two assaultive felony convictions are eligible for expungement. This violation indicates that you have exceeded the allowable number of assaultive felony convictions for expungement under the law.";
-        }
-        
-        if (violation === "sec1_1cViolations") {
-            return "Only one felony with a 10-year waiting period is eligible for expungement. This violation suggests that you have attempted to expunge more than one such felony, which exceeds the permissible limit.";
-        }
-        
-        if (violation === "sec1d_2Violations") {
-            return "Only one Operating While Intoxicated (OWI) conviction is eligible for expungement. This violation indicates that you have more than one OWI conviction, surpassing the limit set by the law for expungement.";
-        }
-        
+      if (violation === "sec1_1aViolations") {
+        return "No convictions are eligible for expungement if you have three or more felony convictions. This violation indicates that you have exceeded the allowable number of expungements under the law.";
+      }
 
-        if (violation === "sec1dTimingViolations") {
-            return "A new conviction or expungement event occurred within the required waiting period. For misdemeanors, the mandatory waiting period is 3 years, while for felonies, it is 5 years. This timing violation indicates that the time elapsed between the convictions was insufficient to meet the legal expungement criteria.";
-        }
-        
+      if (violation === "sec1_1bViolations") {
+        return "No more than two assaultive felony convictions are eligible for expungement. This violation indicates that you have exceeded the allowable number of assaultive felony convictions for expungement under the law.";
+      }
+      
+      if (violation === "sec1_1cViolations") {
+        return "Only one felony with a 10-year waiting period is eligible for expungement. This violation suggests that you have attempted to expunge more than one such felony, which exceeds the permissible limit.";
+      }
+      
+      if (violation === "sec1d_2Violations") {
+        return "Only one Operating While Intoxicated (OWI) conviction is eligible for expungement. This violation indicates that you have more than one OWI conviction, surpassing the limit set by the law for expungement.";
+      }
 
-        if (violation === "backwardWaitingViolations") {
-            return "This expungement attempt violates the backward waiting period rule. A prior conviction occurred within the mandatory waiting period of this conviction, making it ineligible for expungement at this time. The required time gap between the conviction and any previous convictions must be observed to proceed with expungement. (3 years for Misdemeanors and 5 years for Felonies).";
-        }
+      if (violation === "sec1dTimingViolations") {
+        return "A new conviction or expungement event occurred within the required waiting period. For misdemeanors, the mandatory waiting period is 3 years, while for felonies, it is 5 years. This timing violation indicates that the time elapsed between the convictions was insufficient to meet the legal expungement criteria.";
+      }
+
+      if (violation === "backwardWaitingViolations") {
+          return "This expungement attempt violates the backward waiting period rule. A prior conviction occurred within the mandatory waiting period of this conviction, making it ineligible for expungement at this time. The required time gap between the conviction and any previous convictions must be observed to proceed with expungement. (3 years for Misdemeanors and 5 years for Felonies).";
+      }
         
-        if (violation === "forwardWaitingViolations") {
-            return "This conviction violates the forward waiting period rule. A subsequent conviction occurred within the mandatory waiting period following this conviction. To qualify for expungement, no new convictions should occur within the specified waiting period after this conviction. (3 years for Misdemeanors and 5 years for Felonies).";
-        }
+      if (violation === "forwardWaitingViolations") {
+        return "This conviction violates the forward waiting period rule. A subsequent conviction occurred within the mandatory waiting period following this conviction. To qualify for expungement, no new convictions should occur within the specified waiting period after this conviction. (3 years for Misdemeanors and 5 years for Felonies).";
+      }
         
     }
 

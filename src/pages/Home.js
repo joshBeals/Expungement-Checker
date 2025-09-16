@@ -5,7 +5,6 @@
  */
 import React from "react";
 import { Alert, Button, Col, Container, Row } from "react-bootstrap";
-
 export default function Home() {
     return (
       <Container className="d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
